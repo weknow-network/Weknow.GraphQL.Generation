@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Weknow.GraphQL;
 
 [Generator]
-public class GraphQLWrapperGenerator : IIncrementalGenerator
+public class GraphQLResultContainerGenerator : IIncrementalGenerator
 {
     private const string TARGET_ATTRIBUTE = nameof(GenGqlResultContainerAttribute);
     private static readonly string TARGET_SHORT_ATTRIBUTE = nameof(GenGqlResultContainerAttribute).Replace("Attribute", "");
@@ -45,14 +45,6 @@ public class GraphQLWrapperGenerator : IIncrementalGenerator
         /// </summary>
         static bool ShouldTriggerGeneration(SyntaxNode node)
         {
-
-            //    if (node is RecordDeclarationSyntax r)
-            //    { 
-            //        bool hasRecordAttributes = r.AttributeLists.Any(m => m.Attributes.Any(m1 =>
-            //                AttributePredicate(m1.Name.ToString())));
-
-            //        return hasRecordAttributes;
-            //    }
             if (!(node is TypeDeclarationSyntax t)) return false;
 
             bool hasAttributes = t.AttributeLists.Any(m => m.Attributes.Any(m1 =>
@@ -110,7 +102,10 @@ public class GraphQLWrapperGenerator : IIncrementalGenerator
         TypeDeclarationSyntax syntax = item.Syntax;
 
 
-        var args = syntax.AttributeLists.Single().Attributes.Single(m => AttributePredicate(m.Name.ToString())).ArgumentList?.Arguments;
+        var args = syntax.AttributeLists.Where(m => m.Attributes.Any(m1 =>
+                                                        AttributePredicate(m1.Name.ToString())))
+                                        .Single()
+                                        .Attributes.Single(m => AttributePredicate(m.Name.ToString())).ArgumentList?.Arguments;
 
         var cls = syntax.Identifier.Text;
         string? nsCandidate = symbol.ContainingNamespace.ToString();

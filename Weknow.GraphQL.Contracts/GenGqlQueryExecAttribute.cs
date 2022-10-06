@@ -3,12 +3,12 @@
     /// <summary>
     /// Code generation decoration of GraphQL result wrapper attribute
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
-    public class GenGqlResultContainerAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false)]
+    public class GenGqlQueryExecAttribute : Attribute
     {
         public const string DefaultSuffix = "QlResults";
 
-        public GenGqlResultContainerAttribute(string operationName)
+        public GenGqlQueryExecAttribute(string operationName)
         {
             OperationName = operationName;
         }
@@ -23,8 +23,8 @@
         public string Description { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the suffix of the type.
+        /// Gets or sets the namespace.
         /// </summary>
-        public string Suffix { get; set; } = DefaultSuffix;
+        public string? Namespace { get; set; } 
     }
 }
