@@ -3,10 +3,10 @@
     /// <summary>
     /// Code generation decoration of GraphQL result wrapper attribute
     /// </summary>
-    [AttributeUsage(AttributeTargets.All)]
-    public class GraphQLResultAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
+    public class GenGqlResultContainerAttribute : Attribute
     {
-        public GraphQLResultAttribute(string operationName)
+        public GenGqlResultContainerAttribute(string operationName)
         {
             OperationName = operationName;
         }

@@ -9,8 +9,8 @@ using Weknow.GraphQL;
 [Generator]
 public class GraphQLWrapperGenerator : IIncrementalGenerator
 {
-    private const string TARGET_ATTRIBUTE = nameof(GraphQLResultAttribute);
-    private static readonly string TARGET_SHORT_ATTRIBUTE = nameof(GraphQLResultAttribute).Replace("Attribute", "");
+    private const string TARGET_ATTRIBUTE = nameof(GenGqlResultContainerAttribute);
+    private static readonly string TARGET_SHORT_ATTRIBUTE = nameof(GenGqlResultContainerAttribute).Replace("Attribute", "");
     private const string DESC = "Description = \"";
 
     #region Initialize
@@ -43,9 +43,17 @@ public class GraphQLWrapperGenerator : IIncrementalGenerator
         /// </summary>
         static bool ShouldTriggerGeneration(SyntaxNode node)
         {
-            if (!(node is ClassDeclarationSyntax c)) return false;
 
-            bool hasAttributes = c.AttributeLists.Any(m => m.Attributes.Any(m1 =>
+            //    if (node is RecordDeclarationSyntax r)
+            //    { 
+            //        bool hasRecordAttributes = r.AttributeLists.Any(m => m.Attributes.Any(m1 =>
+            //                AttributePredicate(m1.Name.ToString())));
+
+            //        return hasRecordAttributes;
+            //    }
+            if (!(node is TypeDeclarationSyntax t)) return false;
+
+            bool hasAttributes = t.AttributeLists.Any(m => m.Attributes.Any(m1 =>
                     AttributePredicate(m1.Name.ToString())));
 
             return hasAttributes;
@@ -97,12 +105,11 @@ public class GraphQLWrapperGenerator : IIncrementalGenerator
         GenerationInput item)
     {
         var symbol = item.Symbol;
-        ClassDeclarationSyntax syntax = item.Syntax;
+        TypeDeclarationSyntax syntax = item.Syntax;
 
 
         var args = syntax.AttributeLists.Single().Attributes.Single(m => AttributePredicate(m.Name.ToString())).ArgumentList?.Arguments;
 
-        var arg1 = args?.First() as AttributeArgumentSyntax;
         var cls = syntax.Identifier.Text;
         string? nsCandidate = symbol.ContainingNamespace.ToString();
         string ns = nsCandidate != null ? $"namespace {nsCandidate};{Environment.NewLine}" : "";
@@ -146,11 +153,11 @@ class {cls}QlWrapper
     /// <returns></returns>
     private static GenerationInput ToGenerationInput(GeneratorSyntaxContext context)
     {
-        var clsDeclarationSyntax = (ClassDeclarationSyntax)context.Node;
-        
-        var symbol = context.SemanticModel.GetDeclaredSymbol(clsDeclarationSyntax);
-        if (symbol == null) throw new NullReferenceException($"Code generated symbol of {nameof(clsDeclarationSyntax)} is missing");
-        return new GenerationInput(clsDeclarationSyntax, symbol as INamedTypeSymbol);
+        var declarationSyntax = (TypeDeclarationSyntax)context.Node;
+
+        var symbol = context.SemanticModel.GetDeclaredSymbol(declarationSyntax);
+        if (symbol == null) throw new NullReferenceException($"Code generated symbol of {nameof(declarationSyntax)} is missing");
+        return new GenerationInput(declarationSyntax, symbol as INamedTypeSymbol);
     }
 
     #endregion // ToGenerationInput
@@ -158,7 +165,13 @@ class {cls}QlWrapper
     /// <summary>
     /// The predicate whether match to the target attribute
     /// </summary>
-    private static Func<string,bool> AttributePredicate = m =>
-                    m == TARGET_ATTRIBUTE ||
-                    m == TARGET_SHORT_ATTRIBUTE;
+    private static bool AttributePredicate(string candidate)
+    {
+        int len = candidate.LastIndexOf(".");
+        if (len != -1)
+            candidate = candidate.Substring(len + 1);
+
+        return candidate == TARGET_ATTRIBUTE ||
+               candidate == TARGET_SHORT_ATTRIBUTE;
+    }
 }
