@@ -51,10 +51,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="icon.png">
-			<PackagePath></PackagePath>
-			<Pack>True</Pack>
-		</None>
+	  <None Update="icon.png">
+	    <Pack>True</Pack>
+	  </None>
 	</ItemGroup>
 
 	<ItemGroup>

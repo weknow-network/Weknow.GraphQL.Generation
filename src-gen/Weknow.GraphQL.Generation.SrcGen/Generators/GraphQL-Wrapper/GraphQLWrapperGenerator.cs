@@ -138,7 +138,7 @@ public sealed class {cls}QlWrapper
     /// <summary>
     /// Result slot.
     /// </summary>
-    public {cls} {operationName} {{ get; init; }}
+    public {cls}[] {operationName} {{ get; init; }}
 }}
 ");
         spc.AddSource($"{cls}QlWrapper.cs", sb.ToString());
