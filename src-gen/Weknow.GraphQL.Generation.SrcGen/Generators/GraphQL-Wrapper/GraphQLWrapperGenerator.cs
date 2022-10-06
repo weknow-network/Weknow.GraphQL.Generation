@@ -13,6 +13,7 @@ public class GraphQLWrapperGenerator : IIncrementalGenerator
     private const string TARGET_ATTRIBUTE = nameof(GenGqlResultContainerAttribute);
     private static readonly string TARGET_SHORT_ATTRIBUTE = nameof(GenGqlResultContainerAttribute).Replace("Attribute", "");
     private const string DESC = "Description = \"";
+    private const string SUFFIX = "Suffix = \"";
 
     #region Initialize
 
@@ -119,6 +120,11 @@ public class GraphQLWrapperGenerator : IIncrementalGenerator
                         ?.Replace(DESC, "")
                         .Replace("\"", "")
                         .Trim() ?? $"GraphQL entity wrapper of {cls}";
+        var suffix = args?.Select(m => m.ToString())
+                        .FirstOrDefault(m => m.StartsWith(SUFFIX))
+                        ?.Replace(SUFFIX, "")
+                        .Replace("\"", "")
+                        .Trim() ?? GenGqlResultContainerAttribute.DefaultSuffix;
         var operationName = args?.First()
             .GetText()
             .ToString()
@@ -133,7 +139,7 @@ public class GraphQLWrapperGenerator : IIncrementalGenerator
 /// {description}.
 /// </summary>
 [System.CodeDom.Compiler.GeneratedCode(""Weknow.GraphQL.Generation"", ""1.0.0"")]
-public sealed class {cls}QlWrapper
+public sealed class {cls}{suffix}
 {{
     /// <summary>
     /// Result slot.
