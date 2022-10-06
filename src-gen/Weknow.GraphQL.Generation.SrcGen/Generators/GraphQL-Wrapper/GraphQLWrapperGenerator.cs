@@ -133,7 +133,7 @@ public class GraphQLWrapperGenerator : IIncrementalGenerator
 /// {description}.
 /// </summary>
 [System.CodeDom.Compiler.GeneratedCode(""Weknow.GraphQL.Generation"", ""1.0.0"")]
-class {cls}QlWrapper
+public sealed class {cls}QlWrapper
 {{
     /// <summary>
     /// Result slot.
