@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System.CodeDom.Compiler;
+using System.Collections.Immutable;
 using System.Text;
 
 using Microsoft.CodeAnalysis;
@@ -131,6 +132,7 @@ public class GraphQLWrapperGenerator : IIncrementalGenerator
 /// <summary>
 /// {description}.
 /// </summary>
+[System.CodeDom.Compiler.GeneratedCode(""Weknow.GraphQL.Generation"", ""1.0.0"")]
 class {cls}QlWrapper
 {{
     /// <summary>
