@@ -15,9 +15,9 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<PackageTags>event-source, pub, sub, pubsub, messaging, reliable, redis, weknow, bnaya</PackageTags>
+		<PackageTags>graphql, graph-ql, generated, weknow, bnaya</PackageTags>
 		<PackageProjectUrl>https://medium.com/weknow-network</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/weknow-network/Event-Source-Backbone</RepositoryUrl>
+		<RepositoryUrl>https://github.com/weknow-network/Weknow.GraphQL.Generation</RepositoryUrl>
 		<RepositoryType>GitHub</RepositoryType>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
