@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <Configurations>Debug;Release;Gen</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="icon.png">
+      <PackagePath></PackagePath>
+      <Pack>True</Pack>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Weknow.GraphQL.Contracts\Weknow.GraphQL.Contracts.csproj" />
+    <ProjectReference Include="..\Weknow.GraphQL.Generation.SrcGen\Weknow.GraphQL.Generation.SrcGen.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
+  </ItemGroup>
+
+
+</Project>
