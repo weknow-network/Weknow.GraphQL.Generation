@@ -25,36 +25,23 @@ namespace Weknow.GraphQL.Generation.SrcGen.Playground
 
         private const string GITHUB_API_URL = "https://api.github.com/graphql";
 
-        private static readonly GraphQLRequest QUERY = new GraphQLRequest
-        {
-            Query = @"
+        private const string QUERY = @"
                 {
   repository(owner: ""weknow-network"", name: ""Event-Source-Backbone"") {
     createdAt
     forkCount
   }
-}"
+}";
+
+        private static readonly GraphQLRequest QUERY_REQUEST = new GraphQLRequest
+        {
+            Query = QUERY,
+            Variables = new
+            {
+                owner = "weknow-network",
+                name = "Event-Source-Backbone"
+            }
         };
-        //private static readonly GraphQLRequest QUERY = new GraphQLRequest
-        //{
-        //    Query = @"
-        //        {
-        //          repository($owner: String!,$name: String!) {
-        //            repository(owner: $owner, name: $name) {
-        //              createdAt
-        //              forkCount
-        //              commitComments {
-        //                totalCount
-        //              }
-        //            }
-        //          }
-        //        }",
-        //    Variables = new
-        //    {
-        //        owner = "weknow-network",
-        //        name = "Event-Source-Backbone"
-        //    }
-        //};
 
         static async Task Main(string[] args)
         {
@@ -81,9 +68,18 @@ namespace Weknow.GraphQL.Generation.SrcGen.Playground
             IGraphQLClient client = services.GetRequiredService<IGraphQLClient>();
             //client.HttpClient.DefaultRequestHeaders.Add("Authorization", $"bearer {TOKEN}");
 
-            //var r = await client.SendQueryAsync<JsonElement>(QUERY);
+            //var r = await client.SendQueryAsync<JsonElement>(QUERY, variables: new
+            //{
+            //    owner = "weknow-network",
+            //    name = "Event-Source-Backbone"
+            //});
             //Console.WriteLine(r.Data.AsIndentString());
-            var (data, errors) = await client.QueryGqlRepository(QUERY);
+            var (data, errors) = await client.QueryGqlRepository(QUERY, new
+            {
+                owner = "weknow-network",
+                name = "Event-Source-Backbone"
+            });
+            //var (data, errors) = await client.QueryGqlRepository(QUERY_REQUEST);
             if (errors != null)
                 Console.WriteLine($"Error: {errors.First().ToString()}");
             else if(data != null)

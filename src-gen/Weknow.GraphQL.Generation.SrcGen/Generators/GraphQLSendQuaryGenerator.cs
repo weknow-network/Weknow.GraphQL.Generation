@@ -167,6 +167,7 @@ public class GraphQLSendQuaryGenerator : IIncrementalGenerator
 using GraphQL;
 using GraphQL.Client.Abstractions;
 using System.Threading.Tasks;
+using GraphQL.Client.Abstractions;
 {use}{ns}
 /// <summary>
 /// {description}.
@@ -186,6 +187,21 @@ public static class {name}Extensions
         {cls}{array}? data = response.Errors == null ? response?.Data?.{name} : null;
         return (data, response?.Errors);
     }}
+    /// <summary>
+    /// Execute {operationName}
+    /// </summary>
+    public static async ValueTask<({cls}{array}? Data, GraphQLError[]? Errors)> QueryGql{name} (
+                                this IGraphQLClient client,
+                                string query, 
+                                object? variables = null,
+                                string? operationName = null,
+                                CancellationToken cancellationToken = default)
+    {{
+        GraphQLResponse<{cls}{suffix}> response = await client.SendQueryAsync<{cls}{suffix}>(query, variables: variables, operationName: operationName, cancellationToken: cancellationToken);
+        {cls}{array}? data = response.Errors == null ? response?.Data?.{name} : null;
+        return (data, response?.Errors);
+    }}
+
 }}
 ");
         spc.AddSource($"{cls}{suffix}.{operationName}Extensions.cs", sb.ToString());
