@@ -107,6 +107,8 @@ public class GraphQLSendQuaryGenerator : IIncrementalGenerator
         Compilation compilation,
         GenerationInput item)
     {
+        GraphQLResultContainerGenerator.GenerateWrapper(spc, compilation, item);
+
         var symbol = item.Symbol;
         TypeDeclarationSyntax syntax = item.Syntax;
 
@@ -141,11 +143,16 @@ public class GraphQLSendQuaryGenerator : IIncrementalGenerator
                         ?.Replace(SUFFIX, "")
                         .Replace("\"", "")
                         .Trim() ?? GenGqlResultContainerAttribute.DefaultSuffix;
-        var operationName = args?.First()
+        string operationName = args?.First()
             .GetText()
             .ToString()
             .Replace("\"", "")
-            .ToString();
+            .ToString() ?? string.Empty;
+        string name = operationName;
+        if (!string.IsNullOrEmpty(name)  && char.IsLower(name[0]))
+        {
+            name = $"{char.ToUpper(name[0])}{name.Substring(1)}";
+        }
 
         StringBuilder sb = new();
         sb.AppendLine(@$"
@@ -157,12 +164,12 @@ using System.Threading.Tasks;
 /// {description}.
 /// </summary>
 [System.CodeDom.Compiler.GeneratedCode(""Weknow.GraphQL.Generation"", ""1.0.0"")]
-public static class {operationName}Extensions
+public static class {name}Extensions
 {{
     /// <summary>
     /// Execute {operationName}
     /// </summary>
-    public static async ValueTask<({cls}[]? Data, GraphQLError[]? Errors)> QueryGql{operationName} (
+    public static async ValueTask<({cls}[]? Data, GraphQLError[]? Errors)> QueryGql{name} (
                         this IGraphQLClient client, 
                         GraphQLRequest query, 
                         CancellationToken cancellationToken = default)

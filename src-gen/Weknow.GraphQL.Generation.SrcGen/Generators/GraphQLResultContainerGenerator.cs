@@ -93,7 +93,7 @@ public class GraphQLResultContainerGenerator : IIncrementalGenerator
     /// <param name="spc">The SPC.</param>
     /// <param name="compilation">The compilation.</param>
     /// <param name="item">The item.</param>
-    private static void GenerateWrapper(
+    internal static void GenerateWrapper(
         SourceProductionContext spc,
         Compilation compilation,
         GenerationInput item)
