@@ -1,10 +1,10 @@
 ﻿namespace Weknow.GraphQL.Generation.SrcGen.Playground
 {
     // file3.cs
-    [GenGqlQueryExec("repository")]
+    [GenGqlQueryExec("repository", false)]
     public record struct GitHubRepo
     {
-        DateTime CreatedAt { get; init; }
-        int ForkCount { get; init; }
+        public DateTime CreatedAt { get; init; }
+        public int ForkCount { get; init; }
     }
 }

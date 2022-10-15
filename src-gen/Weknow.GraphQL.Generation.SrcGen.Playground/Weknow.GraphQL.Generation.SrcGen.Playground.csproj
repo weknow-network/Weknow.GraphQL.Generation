@@ -13,6 +13,7 @@
     <PackageReference Include="GraphQL.Client.Serializer.SystemTextJson" Version="5.1.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+    <PackageReference Include="Weknow.Text.Json.Extensions" Version="5.1.44" />
   </ItemGroup>
 
   <ItemGroup>

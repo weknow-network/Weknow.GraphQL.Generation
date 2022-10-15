@@ -81,7 +81,15 @@ namespace Weknow.GraphQL.Generation.SrcGen.Playground
             IGraphQLClient client = services.GetRequiredService<IGraphQLClient>();
             //client.HttpClient.DefaultRequestHeaders.Add("Authorization", $"bearer {TOKEN}");
 
-            var graphQLResponse1 = await client.SendQueryAsync<GitHubRepo>(QUERY);
+            //var r = await client.SendQueryAsync<JsonElement>(QUERY);
+            //Console.WriteLine(r.Data.AsIndentString());
+            var (data, errors) = await client.QueryGqlRepository(QUERY);
+            if (errors != null)
+                Console.WriteLine($"Error: {errors.First().ToString()}");
+            else if(data != null)
+            {
+                    Console.WriteLine($"{ data.Value:yyyy-MM-dd HH:mm:ss}");
+            }
 
         }
     }

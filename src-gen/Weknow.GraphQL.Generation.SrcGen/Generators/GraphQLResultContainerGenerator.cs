@@ -96,16 +96,17 @@ public class GraphQLResultContainerGenerator : IIncrementalGenerator
     internal static void GenerateWrapper(
         SourceProductionContext spc,
         Compilation compilation,
-        GenerationInput item)
+        GenerationInput item,
+        Func<string, bool>? predicate = null)
     {
         var symbol = item.Symbol;
         TypeDeclarationSyntax syntax = item.Syntax;
 
-
+        var prd = predicate ?? AttributePredicate;
         var args = syntax.AttributeLists.Where(m => m.Attributes.Any(m1 =>
-                                                        AttributePredicate(m1.Name.ToString())))
+                                                        prd(m1.Name.ToString())))
                                         .Single()
-                                        .Attributes.Single(m => AttributePredicate(m.Name.ToString())).ArgumentList?.Arguments;
+                                        .Attributes.Single(m => prd(m.Name.ToString())).ArgumentList?.Arguments;
 
         var cls = syntax.Identifier.Text;
         string? nsCandidate = symbol.ContainingNamespace.ToString();
@@ -126,6 +127,13 @@ public class GraphQLResultContainerGenerator : IIncrementalGenerator
             .Replace("\"", "")
             .ToString();
 
+        string? pluralStr = args?.Skip(1)?.FirstOrDefault()
+            ?.GetText()
+            ?.ToString()
+            ?.Replace("\"", "")
+            ?.ToString();
+        bool plural = pluralStr == null || pluralStr != "false";
+        string array = plural ? "[]" : string.Empty;
         StringBuilder sb = new();
         sb.AppendLine(@$"
 #pragma warning disable CS8618 // ignore nullable.
@@ -139,7 +147,7 @@ public sealed class {cls}{suffix}
     /// <summary>
     /// Result slot.
     /// </summary>
-    public {cls}[] {operationName} {{ get; init; }}
+    public {cls}{array} {operationName} {{ get; init; }}
 }}
 ");
         spc.AddSource($"{cls}QlWrapper.cs", sb.ToString());

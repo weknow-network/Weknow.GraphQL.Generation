@@ -88,26 +88,26 @@ public class GraphQLSendQuaryGenerator : IIncrementalGenerator
         var (compilation, items) = source;
         foreach (GenerationInput item in items)
         {
-            GenerateWrapper(spc, compilation, item);
+            GenerateQueryExtension(spc, compilation, item);
         }
     }
 
     #endregion // Generate
 
-    #region GenerateWrapper
+    #region GenerateQueryExtension
 
     /// <summary>
-    /// Generates a wrapper.
+    /// Generates the code.
     /// </summary>
     /// <param name="spc">The SPC.</param>
     /// <param name="compilation">The compilation.</param>
     /// <param name="item">The item.</param>
-    private static void GenerateWrapper(
+    private static void GenerateQueryExtension(
         SourceProductionContext spc,
         Compilation compilation,
         GenerationInput item)
     {
-        GraphQLResultContainerGenerator.GenerateWrapper(spc, compilation, item);
+        GraphQLResultContainerGenerator.GenerateWrapper(spc, compilation, item, AttributePredicate);
 
         var symbol = item.Symbol;
         TypeDeclarationSyntax syntax = item.Syntax;
@@ -143,11 +143,19 @@ public class GraphQLSendQuaryGenerator : IIncrementalGenerator
                         ?.Replace(SUFFIX, "")
                         .Replace("\"", "")
                         .Trim() ?? GenGqlResultContainerAttribute.DefaultSuffix;
+
         string operationName = args?.First()
             .GetText()
             .ToString()
             .Replace("\"", "")
             .ToString() ?? string.Empty;
+        string? pluralStr = args?.Skip(1)?.FirstOrDefault()
+            ?.GetText()
+            ?.ToString()
+            ?.Replace("\"", "")
+            ?.ToString();
+        bool plural = pluralStr == null || pluralStr != "false";
+        string array = plural ? "[]" : string.Empty;
         string name = operationName;
         if (!string.IsNullOrEmpty(name)  && char.IsLower(name[0]))
         {
@@ -169,13 +177,13 @@ public static class {name}Extensions
     /// <summary>
     /// Execute {operationName}
     /// </summary>
-    public static async ValueTask<({cls}[]? Data, GraphQLError[]? Errors)> QueryGql{name} (
+    public static async ValueTask<({cls}{array}? Data, GraphQLError[]? Errors)> QueryGql{name} (
                         this IGraphQLClient client, 
                         GraphQLRequest query, 
                         CancellationToken cancellationToken = default)
     {{
         GraphQLResponse<{cls}{suffix}> response = await client.SendQueryAsync<{cls}{suffix}>(query, cancellationToken);
-        {cls}[]? data = response.Errors == null ? response?.Data?.{operationName} : null;
+        {cls}{array}? data = response.Errors == null ? response?.Data?.{operationName} : null;
         return (data, response?.Errors);
     }}
 }}
@@ -183,7 +191,7 @@ public static class {name}Extensions
         spc.AddSource($"{cls}{suffix}.{operationName}Extensions.cs", sb.ToString());
     }
 
-    #endregion // GenerateWrapper
+    #endregion // GenerateQueryExtension
 
     #region ToGenerationInput
 

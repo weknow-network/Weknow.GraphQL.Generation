@@ -8,14 +8,21 @@
     {
         public const string DefaultSuffix = "QlResults";
 
-        public GenGqlResultContainerAttribute(string operationName)
+        public GenGqlResultContainerAttribute(string operationName, bool plural = true)
         {
             OperationName = operationName;
+            Plural = plural;
         }
+
         /// <summary>
         /// The name of the result wrapper property.
         /// </summary>
         public string OperationName { get; }
+
+        /// <summary>
+        /// Indicating whether to generate a plural result (array).
+        /// </summary>
+        public bool Plural { get; }
 
         /// <summary>
         /// Gets or sets the description.
