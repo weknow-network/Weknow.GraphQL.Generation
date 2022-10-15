@@ -183,7 +183,7 @@ public static class {name}Extensions
                         CancellationToken cancellationToken = default)
     {{
         GraphQLResponse<{cls}{suffix}> response = await client.SendQueryAsync<{cls}{suffix}>(query, cancellationToken);
-        {cls}{array}? data = response.Errors == null ? response?.Data?.{operationName} : null;
+        {cls}{array}? data = response.Errors == null ? response?.Data?.{name} : null;
         return (data, response?.Errors);
     }}
 }}

@@ -121,11 +121,11 @@ public class GraphQLResultContainerGenerator : IIncrementalGenerator
                         ?.Replace(SUFFIX, "")
                         .Replace("\"", "")
                         .Trim() ?? GenGqlResultContainerAttribute.DefaultSuffix;
-        var operationName = args?.First()
+        string operationName = args?.First()
             .GetText()
             .ToString()
             .Replace("\"", "")
-            .ToString();
+            .ToString() ?? throw new ArgumentNullException("Operation name is missing");
 
         string? pluralStr = args?.Skip(1)?.FirstOrDefault()
             ?.GetText()
@@ -134,9 +134,18 @@ public class GraphQLResultContainerGenerator : IIncrementalGenerator
             ?.ToString();
         bool plural = pluralStr == null || pluralStr != "false";
         string array = plural ? "[]" : string.Empty;
+
+        string name = operationName;
+        if (!string.IsNullOrEmpty(name) && char.IsLower(name[0]))
+        {
+            name = $"{char.ToUpper(name[0])}{name.Substring(1)}";
+        }
+
         StringBuilder sb = new();
         sb.AppendLine(@$"
 #pragma warning disable CS8618 // ignore nullable.
+using System.Text.Json.Serialization;
+
 {ns}
 /// <summary>
 /// {description}.
@@ -147,7 +156,8 @@ public sealed class {cls}{suffix}
     /// <summary>
     /// Result slot.
     /// </summary>
-    public {cls}{array} {operationName} {{ get; init; }}
+    [JsonPropertyName(""{operationName}"")]
+    public {cls}{array} {name} {{ get; init; }}
 }}
 ");
         spc.AddSource($"{cls}QlWrapper.cs", sb.ToString());
