@@ -9,7 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Weknow.GraphQL.Generation.S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Weknow.GraphQL.Generation.SrcGen.Playground", "src-gen\Weknow.GraphQL.Generation.SrcGen.Playground\Weknow.GraphQL.Generation.SrcGen.Playground.csproj", "{49A8B718-DAB6-4D04-874C-0B1EA12826EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weknow.GraphQL.Contracts", "Weknow.GraphQL.Contracts\Weknow.GraphQL.Contracts.csproj", "{A1801FEF-06E0-4120-BD25-81AEE7C521F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Weknow.GraphQL.Contracts", "Weknow.GraphQL.Contracts\Weknow.GraphQL.Contracts.csproj", "{A1801FEF-06E0-4120-BD25-81AEE7C521F6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BDE4C97B-2DBE-414E-BE07-106F27DD156E}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

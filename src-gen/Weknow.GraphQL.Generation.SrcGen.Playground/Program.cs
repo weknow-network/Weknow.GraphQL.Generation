@@ -84,7 +84,7 @@ namespace Weknow.GraphQL.Generation.SrcGen.Playground
                 Console.WriteLine($"Error: {errors.First().ToString()}");
             else if(data != null)
             {
-                    Console.WriteLine($"{ data.Value:yyyy-MM-dd HH:mm:ss}");
+                Console.WriteLine($"{ data.Value:yyyy-MM-dd HH:mm:ss}");
             }
 
         }
