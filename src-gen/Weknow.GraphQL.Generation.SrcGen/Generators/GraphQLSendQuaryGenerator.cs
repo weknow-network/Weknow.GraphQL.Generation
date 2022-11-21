@@ -167,7 +167,6 @@ public class GraphQLSendQuaryGenerator : IIncrementalGenerator
 using GraphQL;
 using GraphQL.Client.Abstractions;
 using System.Threading.Tasks;
-using GraphQL.Client.Abstractions;
 {use}{ns}
 /// <summary>
 /// {description}.
